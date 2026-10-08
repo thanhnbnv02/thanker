@@ -26,7 +26,7 @@ messages = [{"role": "user", "content": args.user_prompt}]
 response = client.chat.completions.create(model="openrouter/free", messages=messages)
 
 
-def main():
+def main() -> None:
     usage_response = response.usage
     if not usage_response:
         raise RuntimeError("Response usage is None. Cannot access token counts.")

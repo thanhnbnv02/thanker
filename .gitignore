@@ -7,6 +7,7 @@ wheels/
 *.egg-info
 src
 *test*
+*.txt*
 
 # Virtual environments
 dev.env
