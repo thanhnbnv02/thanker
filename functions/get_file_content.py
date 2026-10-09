@@ -1,20 +1,15 @@
 import os
 
-from config import MAX_READ_CHARS
+from config import ALLOWED_ACTIONS, MAX_READ_CHARS
+from helpers import validate_file_path
 
 
 def get_file_content(working_directory: str, file_path: str) -> str:
-    working_directory_absolute_path = os.path.abspath(working_directory)
-    target_dir = os.path.normpath(
-        os.path.join(working_directory_absolute_path, file_path)
+    target_dir = validate_file_path(
+        working_directory, file_path, action=ALLOWED_ACTIONS[0]
     )
-    valid_target_dir = (
-        os.path.commonpath([working_directory_absolute_path, target_dir])
-        == working_directory_absolute_path
-    )
-    if not valid_target_dir:
-        return f'Error: Cannot read "{file_path}" as it is outside the permitted working directory'
-
+    if "Error:" in target_dir:
+        return target_dir
     is_directory = os.path.isfile(target_dir)
     if not is_directory:
         return f'Error: File not found or is not a regular file: "{file_path}"'

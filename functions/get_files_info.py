@@ -1,18 +1,15 @@
 import os
 
+from config import ALLOWED_ACTIONS
+from helpers import validate_file_path
+
 
 def get_files_info(working_directory: str, directory: str = ".") -> str:
-    working_directory_absolute_path = os.path.abspath(working_directory)
-
-    target_dir = os.path.normpath(
-        os.path.join(working_directory_absolute_path, directory)
+    target_dir = validate_file_path(
+        working_directory, directory, action=ALLOWED_ACTIONS[-1]
     )
-    valid_target_dir = (
-        os.path.commonpath([working_directory_absolute_path, target_dir])
-        == working_directory_absolute_path
-    )
-    if not valid_target_dir:
-        return f'Error: Cannot list "{directory}" as it is outside the permitted working directory'
+    if "Error:" in target_dir:
+        return target_dir
 
     is_directory = os.path.isdir(target_dir)
     if not is_directory:
