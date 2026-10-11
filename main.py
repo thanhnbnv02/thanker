@@ -1,8 +1,12 @@
 import argparse
+import json
 import os
 
 from dotenv import load_dotenv
 from openai import OpenAI
+
+from call_functions import available_functions
+from config import SYSTEM_PROMPT
 
 load_dotenv()
 
@@ -21,9 +25,14 @@ if not all((api_key, base_url)):
 
 client = OpenAI(base_url=base_url, api_key=api_key)
 
-messages = [{"role": "user", "content": args.user_prompt}]
+messages = [
+    {"role": "system", "content": SYSTEM_PROMPT},
+    {"role": "user", "content": args.user_prompt},
+]
 
-response = client.chat.completions.create(model="openrouter/free", messages=messages)
+response = client.chat.completions.create(
+    model="openrouter/free", messages=messages, temperature=0, tools=available_functions
+)
 
 
 def main() -> None:
@@ -40,6 +49,11 @@ def main() -> None:
         print(f"\nResponse tokens: {completion_token}")
 
     print(response.choices[0].message.content)
+
+    message = response.choices[0].message
+    for tool_call in message.tool_calls:
+        function_args = json.loads(tool_call.function.arguments or "{}")
+        print(f"Calling function: {tool_call.function.name}({function_args})")
 
 
 if __name__ == "__main__":

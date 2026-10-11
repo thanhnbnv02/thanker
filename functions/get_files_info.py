@@ -3,10 +3,27 @@ import os
 from config import ALLOWED_ACTIONS
 from helpers import validate_file_path
 
+schema_get_files_info = {
+    "type": "function",
+    "function": {
+        "name": "get_files_info",
+        "description": "Lists files in a specified directory relative to the working directory, providing file size and directory status",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "directory": {
+                    "type": "string",
+                    "description": "Directory path to list files from, relative to the working directory (default is the working directory itself)",
+                },
+            },
+        },
+    },
+}
+
 
 def get_files_info(working_directory: str, directory: str = ".") -> str:
     target_dir = validate_file_path(
-        working_directory, directory, action=ALLOWED_ACTIONS[-1]
+        working_directory, directory, action=ALLOWED_ACTIONS[2]
     )
     if "Error:" in target_dir:
         return target_dir
@@ -26,6 +43,5 @@ def get_files_info(working_directory: str, directory: str = ".") -> str:
                     ]
                 )
             except Exception as e:
-                pass
                 files_info.append(f"- Error: {e}")
         return "\n".join(files_info)
