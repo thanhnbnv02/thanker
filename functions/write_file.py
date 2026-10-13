@@ -4,6 +4,37 @@ from config import ALLOWED_ACTIONS
 from helpers import validate_file_path
 
 
+schema_write_file = {
+    "type": "function",
+    "function": {
+        "name": "write_file",
+        "description": (
+            "Write content to a file within the permitted working directory. "
+            "Creates the file if it does not exist and overwrites it if it does."
+        ),
+        "parameters": {
+            "type": "object",
+            "required": ["file_path", "content"],
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "description": (
+                        "Path to the file relative to the working directory."
+                    ),
+                },
+                "content": {
+                    "type": "string",
+                    "description": (
+                        "Text content to write to the file."
+                    ),
+                },
+            },
+        },
+    },
+}
+
+
+
 def write_file(working_directory: str, file_path: str, content: str) -> str:
     target_dir = validate_file_path(
         working_directory, file_path, action=ALLOWED_ACTIONS[1]

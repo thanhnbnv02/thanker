@@ -3,6 +3,23 @@ import os
 from config import ALLOWED_ACTIONS, MAX_READ_CHARS
 from helpers import validate_file_path
 
+schema_get_file_content = {
+    "type": "function",
+    "function": {
+        "name": "get_file_content",
+        "description": "Get content of a file in specified directory relative to the working directory",
+        "parameters": {
+            "type": "object",
+            "required": ["file_path"],
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "description": "Get content of a file in specified directory relative to the working directory",
+                },
+            },
+        },
+    },
+}
 
 def get_file_content(working_directory: str, file_path: str) -> str:
     target_dir = validate_file_path(

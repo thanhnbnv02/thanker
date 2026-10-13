@@ -5,6 +5,40 @@ from config import ALLOWED_ACTIONS
 from helpers import validate_file_path
 
 
+schema_run_python_file = {
+    "type": "function",
+    "function": {
+        "name": "run_python_file",
+        "description": (
+            "Execute a Python file located within the permitted "
+            "working directory, optionally passing command-line arguments."
+        ),
+        "parameters": {
+            "type": "object",
+            "required": ["file_path"],
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "description": (
+                        "Path to the Python file relative to the working directory."
+                    ),
+                },
+                "args": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                    },
+                    "description": (
+                        "Optional command-line arguments to pass to the Python file."
+                    ),
+                },
+            },
+        },
+    },
+}
+
+
+
 def run_python_file(
     working_directory: str, file_path: str, args: list[str] | None = None
 ) -> str:
